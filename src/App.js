@@ -26,8 +26,8 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    unsubscribeFromAuth() 
     return () => {
+      unsubscribeFromAuth() 
       console.log("unsubscribed")
     }
   }, [])
@@ -35,7 +35,7 @@ const App = () => {
 
   return (
     <div>
-      <Header />
+      <Header currentUser={currentUser} />
       <Switch>
         <Route exact path='/' component={HomePage} />
         <Route path='/shop' component={ShopPage} />
