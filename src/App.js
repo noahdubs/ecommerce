@@ -9,7 +9,7 @@ import Header from './components/header/header.component.jsx'
 
 import './App.css'
 
-import { auth } from './firebase/firebase.utils'
+import { auth, createUserProfileDocument } from './firebase/firebase.utils'
 
 
 const App = () => {
@@ -19,10 +19,21 @@ const App = () => {
   let unsubscribeFromAuth = null
 
   useEffect(() => {
-      unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      setUser({currentUser: user})
-      console.log(user)
-    })
+      unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+		if(userAuth) {
+			const userRef = await createUserProfileDocument(userAuth)
+
+			userRef.onSnapshot(snapShot => {
+				setUser({
+					id: snapShot.id,
+					...snapShot.data()
+				})
+			})
+		} else {
+			setUser(userAuth)
+		}
+      })
+	  console.log(currentUser)
   }, [])
 
   useEffect(() => {
